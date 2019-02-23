@@ -101,6 +101,31 @@ blackSheep = Sheep(True, 400, 400)
 
 def game():
     global q
+    ready = False
+    win.fill((0,0,0))
+    pygame.draw.rect(win,(255, 0, 0), (150, 400, 500, 200))
+    pygame.display.update()
+    while not ready:
+        for event in pygame.event.get():
+            mouse = pygame.mouse.get_pos()
+            if event.type == pygame.QUIT:
+                quit()
+            if mouse[0] >= 140 and mouse[0] <= 650:
+                if mouse[1] >= 400 and mouse[1] <= 600:
+                    pygame.draw.rect(win, (255, 255, 0), (150, 400, 500, 200))
+                    pygame.display.update()
+                else:
+                    pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                    pygame.display.update()
+            else:
+                pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if mouse[0] >= 140 and mouse[0] <= 650:
+                    if mouse[1] >= 400 and mouse[1] <= 600:
+                        ready = True
+
+
     while not q:
         pygame.time.delay(100)
         win.fill((0, 0, 0))
