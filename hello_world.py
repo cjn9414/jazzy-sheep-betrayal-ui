@@ -74,11 +74,11 @@ class Sheep:
         }
 
     def update_json(self, orient):
-        if orient = Orientation.RIGHT:
+        if orient == Orientation.RIGHT:
             self.json_dump["x"] += 50
-        else if orient = Orientation.LEFT:
+        elif orient == Orientation.LEFT:
             self.json_dump["x"] -= 50
-        else if orient = Orientation.UP:
+        elif orient == Orientation.UP:
             self.json_dump["y"] -= 50
         else:
             self.json_dump["y"] += 50
