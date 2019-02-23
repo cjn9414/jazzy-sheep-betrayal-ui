@@ -55,7 +55,7 @@ def draw_grid(window):
 
 class Sheep:
     def __init__(self, type, x, y):
-        if black:
+        if type == 'black':
             self.color = (0, 0, 0)
             self.image = pygame.image.load('black.png')
         else:
