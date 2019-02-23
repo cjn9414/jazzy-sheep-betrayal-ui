@@ -13,6 +13,10 @@ WIN_WIDTH = 800
 BOARD_WIDTH = 600
 BOARD_HEIGHT = 600
 
+font = pygame.font.SysFont('helvetica', 150)
+title = pygame.font.SysFont('helvetica', 400)
+
+
 win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.mixer.init()
 pygame.mixer.music.load("royalty-free-jazz.mp3")
@@ -84,14 +88,22 @@ class Sheep:
             self.json_dump["y"] += 50
         
 
-blackSheep = Sheep(True, 400, 400)
+blackSheep = Sheep('black', 400, 400)
+whiteSheep = Sheep('white', 200, 400)
+
 
 
 def game():
     global q
     ready = False
-    win.fill((0,0,0))
-    pygame.draw.rect(win,(255, 0, 0), (150, 400, 500, 200))
+    win.fill((0, 0, 0))
+    rendered = font.render("READY", 1, (255, 255, 255))
+    rendered_title = font.render("Jazzy Sheep", 1, (255, 255, 255))
+    rendered_title_bottom = font.render("Betrayal", 1, (255, 255, 255))
+    pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+    win.blit(rendered_title, (75, 0))
+    win.blit(rendered_title_bottom, (175, 125))
+    win.blit(rendered, (200, 450))
     pygame.display.update()
     while not ready:
         for event in pygame.event.get():
@@ -101,12 +113,15 @@ def game():
             if mouse[0] >= 140 and mouse[0] <= 650:
                 if mouse[1] >= 400 and mouse[1] <= 600:
                     pygame.draw.rect(win, (255, 255, 0), (150, 400, 500, 200))
+                    win.blit(rendered, (200, 450))
                     pygame.display.update()
                 else:
                     pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                    win.blit(rendered, (200, 450))
                     pygame.display.update()
             else:
                 pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                win.blit(rendered, (200, 450))
                 pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if mouse[0] >= 140 and mouse[0] <= 650:
@@ -119,8 +134,10 @@ def game():
         win.fill((0, 0, 0))
         draw_grid(win)
         win.blit(blackSheep.image, (2 + blackSheep.x, 10 + blackSheep.y))
+        win.blit(whiteSheep.image, (2 + whiteSheep.x, 10 + whiteSheep.y))
         pygame.display.update()
         lastKey = None
+        lastKeyb = None
         timeUp = False
         while not timeUp:
             for event in pygame.event.get():
@@ -135,14 +152,30 @@ def game():
                     lastKey = "u"
                 if keys[pygame.K_DOWN]:
                     lastKey = "d"
+                if keys[pygame.K_a]:
+                    lastKeyb = "l"
+                if keys[pygame.K_d]:
+                    lastKeyb = "r"
+                if keys[pygame.K_w]:
+                    lastKeyb = "u"
+                if keys[pygame.K_s]:
+                    lastKeyb = "d"
             break
         if lastKey == "l":
-            blackSheep.x -= 50
+            whiteSheep.x -= 50
         if lastKey == "r":
-            blackSheep.x += 50
+            whiteSheep.x += 50
         if lastKey == "u":
-            blackSheep.y -= 50
+            whiteSheep.y -= 50
         if lastKey == "d":
+            whiteSheep.y += 50
+        if lastKeyb == "l":
+            blackSheep.x -= 50
+        if lastKeyb == "r":
+            blackSheep.x += 50
+        if lastKeyb == "u":
+            blackSheep.y -= 50
+        if lastKeyb == "d":
             blackSheep.y += 50
 
 
