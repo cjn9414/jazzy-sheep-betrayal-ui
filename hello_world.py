@@ -1,6 +1,9 @@
 import pygame
 import os
+import json
+
 from enum import Enum
+
 
 pygame.init()
 
@@ -27,6 +30,9 @@ pygame.display.set_caption("Jazzy Sheep Betrayal")
 q = False
 
 
+players = dict()
+
+
 class Orientation(Enum):
     LEFT = 0
     RIGHT = 1
@@ -34,59 +40,59 @@ class Orientation(Enum):
     DOWN = 3
 
 
+def update_players(d):
+    data = json.loads(d)
+    for player in data[0]:
+        if player["id"] in players:
+            players[player["id"]].x = player["id"]["x"]
+            players[player["id"]].y = player["id"]["y"]
+        else:
+            players["id"] = Sheep(player["type"], player["x"], player["y"])
+
+
 def draw_grid(window):
     maxx = 1000
     maxy = 1000
     for i in range(0, maxx, 50):
-        pygame.draw.line(window,(138, 138,138), [i, 1000], [i, 0], 2)
+        pygame.draw.line(window, (138, 138,138), [i, 1000], [i, 0], 2)
     for i in range(0, maxy, 50):
         pygame.draw.line(window, (138, 138, 138), [1000, i], [0, i], 2)
     pygame.display.update()
 
 
 class Sheep:
-    def __init__(self, black, x, y):
-        if black:
-            self.color = (0, 0, 0)
-        else:
-            self.color = (255, 255, 255)
+    def __init__(self, type, x, y):
         self.x = x
         self.y = y
-        self.w = 25
-        self.h = 25
+        self.type = type
+        self.id = id
         self.orient = Orientation.RIGHT
+        self.json_dump = {
+            "id": self.id,
+            "type": self.type,
+            "x": self.x,
+            "y": self.y
+        }
+    def update_json(self):
 
 blackSheep = Sheep(True, 400, 400)
 
-def draw_grid(window):
-    maxx = 1000
-    maxy = 1000
-    for i in range(0, maxx, 50):
-        pygame.draw.line(window,(138, 138,138), [i, 1000], [i, 0], 2)
-    for i in range(0, maxy, 50):
-        pygame.draw.line(window, (138, 138, 138), [1000, i], [0, i], 2)
-    pygame.display.update()
 
 def game():
     global q
     draw_grid(win)
     while not q:
-        pygame.time.delay(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 q = True
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
-                blackSheep.x -= 25
                 blackSheep.orient = Orientation.LEFT
             if keys[pygame.K_RIGHT]:
-                blackSheep.x += 25
                 blackSheep.orient = Orientation.RIGHT
             if keys[pygame.K_UP]:
-                blackSheep.y -= 25
                 blackSheep.orient = Orientation.UP
             if keys[pygame.K_DOWN]:
-                blackSheep.y += 25
                 blackSheep.orient = Orientation.DOWN
 
         pygame.draw.rect(win, (255, 255, 255), (200, 200, 400, 400))
