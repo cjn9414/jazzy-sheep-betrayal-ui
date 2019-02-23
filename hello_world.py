@@ -56,14 +56,22 @@ class Sheep:
         self.h = 25
         self.orient = Orientation.RIGHT
 
-
 blackSheep = Sheep(True, 400, 400)
 
+def draw_grid(window):
+    maxx = 1000
+    maxy = 1000
+    for i in range(0, maxx, 50):
+        pygame.draw.line(window,(138, 138,138), [i, 1000], [i, 0], 2)
+    for i in range(0, maxy, 50):
+        pygame.draw.line(window, (138, 138, 138), [1000, i], [0, i], 2)
+    pygame.display.update()
 
 def game():
     global q
     draw_grid(win)
     while not q:
+        pygame.time.delay(100)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 q = True
