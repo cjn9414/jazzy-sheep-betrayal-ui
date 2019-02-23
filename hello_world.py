@@ -24,6 +24,11 @@ illum = pygame.image.load(illum_path)
 illum = pygame.transform.scale(illum, (200, 200))
 
 win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+pygame.mixer.init()
+pygame.mixer.music.load("royalty-free-jazz.mp3")
+pygame.mixer.music.play()
+
+
 
 pygame.display.set_caption("Jazzy Sheep Betrayal")
 
@@ -49,6 +54,22 @@ def update_players(d):
         else:
             players["id"] = Sheep(player["type"], player["x"], player["y"])
 
+            
+class Sheep:
+    def __init__(self, black, x, y):
+        if black:
+            self.color = (0, 0, 0)
+            self.image = pygame.image.load('black.png')
+        else:
+            self.color = (255, 255, 255)
+            self.image = pygame.image.load('white.png')
+
+        self.x = x
+        self.y = y
+        self.w = 25
+        self.h = 25
+        self.orient = Orientation.RIGHT
+        
 
 def draw_grid(window):
     maxx = 1000
@@ -80,24 +101,36 @@ blackSheep = Sheep(True, 400, 400)
 
 def game():
     global q
-    draw_grid(win)
     while not q:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                q = True
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
-                blackSheep.orient = Orientation.LEFT
-            if keys[pygame.K_RIGHT]:
-                blackSheep.orient = Orientation.RIGHT
-            if keys[pygame.K_UP]:
-                blackSheep.orient = Orientation.UP
-            if keys[pygame.K_DOWN]:
-                blackSheep.orient = Orientation.DOWN
-
-        pygame.draw.rect(win, (255, 255, 255), (200, 200, 400, 400))
         pygame.time.delay(100)
-
+        win.fill((0, 0, 0))
+        draw_grid(win)
+        win.blit(blackSheep.image, (2 + blackSheep.x, 10 + blackSheep.y))
+        pygame.display.update()
+        lastKey = None
+        timeUp = False
+        while not timeUp:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    q = True
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_LEFT]:
+                    lastKey = "l"
+                if keys[pygame.K_RIGHT]:
+                    lastKey = "r"
+                if keys[pygame.K_UP]:
+                    lastKey = "u"
+                if keys[pygame.K_DOWN]:
+                    lastKey = "d"
+            break
+        if lastKey == "l":
+            blackSheep.x -= 50
+        if lastKey == "r":
+            blackSheep.x += 50
+        if lastKey == "u":
+            blackSheep.y -= 50
+        if lastKey == "d":
+            blackSheep.y += 50
         filter = pygame.surface.Surface((BOARD_WIDTH, BOARD_HEIGHT))
 
         filter.fill(pygame.color.Color('white'))
