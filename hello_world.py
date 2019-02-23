@@ -55,22 +55,6 @@ def update_players(d):
             players["id"] = Sheep(player["type"], player["x"], player["y"])
 
             
-class Sheep:
-    def __init__(self, black, x, y):
-        if black:
-            self.color = (0, 0, 0)
-            self.image = pygame.image.load('black.png')
-        else:
-            self.color = (255, 255, 255)
-            self.image = pygame.image.load('white.png')
-
-        self.x = x
-        self.y = y
-        self.w = 25
-        self.h = 25
-        self.orient = Orientation.RIGHT
-        
-
 def draw_grid(window):
     maxx = 1000
     maxy = 1000
@@ -83,6 +67,12 @@ def draw_grid(window):
 
 class Sheep:
     def __init__(self, type, x, y):
+        if black:
+            self.color = (0, 0, 0)
+            self.image = pygame.image.load('black.png')
+        else:
+            self.color = (255, 255, 255)
+            self.image = pygame.image.load('white.png')
         self.x = x
         self.y = y
         self.type = type
@@ -94,7 +84,17 @@ class Sheep:
             "x": self.x,
             "y": self.y
         }
-    def update_json(self):
+
+    def update_json(self, orient):
+        if orient = Orientation.RIGHT:
+            self.json_dump["x"] += 50
+        else if orient = Orientation.LEFT:
+            self.json_dump["x"] -= 50
+        else if orient = Orientation.UP:
+            self.json_dump["y"] -= 50
+        else:
+            self.json_dump["y"] += 50
+        
 
 blackSheep = Sheep(True, 400, 400)
 
