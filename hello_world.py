@@ -72,7 +72,7 @@ def game():
                     lastKey = "u"
                 if keys[pygame.K_DOWN]:
                     lastKey = "d"
-
+            break
         if lastKey == "l":
             blackSheep.x -= 50
         if lastKey == "r":
