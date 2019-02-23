@@ -10,6 +10,11 @@ BOARD_WIDTH = 600
 BOARD_HEIGHT = 600
 
 win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+pygame.mixer.init()
+pygame.mixer.music.load("royalty-free-jazz.mp3")
+pygame.mixer.music.play()
+
+
 
 pygame.display.set_caption("Jazzy Sheep Betrayal")
 
