@@ -13,6 +13,10 @@ WIN_WIDTH = 800
 BOARD_WIDTH = 600
 BOARD_HEIGHT = 600
 
+font = pygame.font.SysFont('helvetica', 150)
+title = pygame.font.SysFont('helvetica', 400)
+
+
 win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 pygame.mixer.init()
 pygame.mixer.music.load("royalty-free-jazz.mp3")
@@ -47,7 +51,7 @@ def draw_grid(window):
     maxx = 1000
     maxy = 1000
     for i in range(0, maxx, 50):
-        pygame.draw.line(window, (138, 138,138), [i, 1000], [i, 0], 2)
+        pygame.draw.line(window, (138, 138, 138), [i, 1000], [i, 0], 2)
     for i in range(0, maxy, 50):
         pygame.draw.line(window, (138, 138, 138), [1000, i], [0, i], 2)
     pygame.display.update()
@@ -90,8 +94,14 @@ blackSheep = Sheep(True, 400, 400)
 def game():
     global q
     ready = False
-    win.fill((0,0,0))
-    pygame.draw.rect(win,(255, 0, 0), (150, 400, 500, 200))
+    win.fill((0, 0, 0))
+    rendered = font.render("READY", 1, (255, 255, 255))
+    rendered_title = font.render("Jazzy Sheep", 1, (255, 255, 255))
+    rendered_title_bottom = font.render("Betrayal", 1, (255, 255, 255))
+    pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+    win.blit(rendered_title, (75, 0))
+    win.blit(rendered_title_bottom, (175, 125))
+    win.blit(rendered, (200, 450))
     pygame.display.update()
     while not ready:
         for event in pygame.event.get():
@@ -101,12 +111,15 @@ def game():
             if mouse[0] >= 140 and mouse[0] <= 650:
                 if mouse[1] >= 400 and mouse[1] <= 600:
                     pygame.draw.rect(win, (255, 255, 0), (150, 400, 500, 200))
+                    win.blit(rendered, (200, 450))
                     pygame.display.update()
                 else:
                     pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                    win.blit(rendered, (200, 450))
                     pygame.display.update()
             else:
                 pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                win.blit(rendered, (200, 450))
                 pygame.display.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if mouse[0] >= 140 and mouse[0] <= 650:
