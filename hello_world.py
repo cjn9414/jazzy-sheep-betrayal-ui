@@ -1,6 +1,7 @@
 import pygame
 import os
 import json
+import socket
 
 from enum import Enum
 
@@ -55,7 +56,7 @@ def draw_grid(window):
 
 class Sheep:
     def __init__(self, type, x, y):
-        if type == 'black':
+        if type == 'BLACK':
             self.color = (0, 0, 0)
             self.image = pygame.image.load('black.png')
         else:
@@ -90,60 +91,77 @@ blackSheep = Sheep(True, 400, 400)
 def game():
     global q
     ready = False
-    win.fill((0,0,0))
-    pygame.draw.rect(win,(255, 0, 0), (150, 400, 500, 200))
-    pygame.display.update()
-    while not ready:
-        for event in pygame.event.get():
-            mouse = pygame.mouse.get_pos()
-            if event.type == pygame.QUIT:
-                quit()
-            if mouse[0] >= 140 and mouse[0] <= 650:
-                if mouse[1] >= 400 and mouse[1] <= 600:
-                    pygame.draw.rect(win, (255, 255, 0), (150, 400, 500, 200))
-                    pygame.display.update()
+    HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
+    PORT = 8443
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+
+        data = s.recv(10240).decode('utf-8')
+        print(data)
+        d = json.loads(data)
+
+        win.fill((0,0,0))
+        pygame.draw.rect(win,(255, 0, 0), (150, 400, 500, 200))
+        pygame.display.update()
+        while not ready:
+            for event in pygame.event.get():
+                mouse = pygame.mouse.get_pos()
+                if event.type == pygame.QUIT:
+                    quit()
+                if mouse[0] >= 140 and mouse[0] <= 650:
+                    if mouse[1] >= 400 and mouse[1] <= 600:
+                        pygame.draw.rect(win, (255, 255, 0), (150, 400, 500, 200))
+                        pygame.display.update()
+                    else:
+                        pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
+                        pygame.display.update()
                 else:
                     pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
                     pygame.display.update()
-            else:
-                pygame.draw.rect(win, (255, 0, 0), (150, 400, 500, 200))
-                pygame.display.update()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if mouse[0] >= 140 and mouse[0] <= 650:
-                    if mouse[1] >= 400 and mouse[1] <= 600:
-                        ready = True
-
-
-    while not q:
-        pygame.time.delay(100)
-        win.fill((0, 0, 0))
-        draw_grid(win)
-        win.blit(blackSheep.image, (2 + blackSheep.x, 10 + blackSheep.y))
-        pygame.display.update()
-        lastKey = None
-        timeUp = False
-        while not timeUp:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    q = True
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_LEFT]:
-                    lastKey = "l"
-                if keys[pygame.K_RIGHT]:
-                    lastKey = "r"
-                if keys[pygame.K_UP]:
-                    lastKey = "u"
-                if keys[pygame.K_DOWN]:
-                    lastKey = "d"
-            break
-        if lastKey == "l":
-            blackSheep.x -= 50
-        if lastKey == "r":
-            blackSheep.x += 50
-        if lastKey == "u":
-            blackSheep.y -= 50
-        if lastKey == "d":
-            blackSheep.y += 50
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if mouse[0] >= 140 and mouse[0] <= 650:
+                        if mouse[1] >= 400 and mouse[1] <= 600:
+                            ready = True
+        # send that we are ready
+        
+        print('here')
+        s.send(b'true\n')
+        print('yo')
+        data = s.recv(10240).decode('utf-8')
+        print(data)
+        d = json.loads(data)
+        
+        while not q:
+            pygame.time.delay(100)
+            win.fill((0, 0, 0))
+            draw_grid(win)
+            win.blit(blackSheep.image, (2 + blackSheep.x, 10 + blackSheep.y))
+            pygame.display.update()
+            lastKey = None
+            timeUp = False
+            while not timeUp:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        q = True
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_LEFT]:
+                        lastKey = "l"
+                    if keys[pygame.K_RIGHT]:
+                        lastKey = "r"
+                    if keys[pygame.K_UP]:
+                        lastKey = "u"
+                    if keys[pygame.K_DOWN]:
+                        lastKey = "d"
+                break
+            if lastKey == "l":
+                blackSheep.x -= 50
+            if lastKey == "r":
+                blackSheep.x += 50
+            if lastKey == "u":
+                blackSheep.y -= 50
+            if lastKey == "d":
+                blackSheep.y += 50
 
 
 if __name__ == "__main__":
